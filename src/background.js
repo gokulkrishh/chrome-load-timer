@@ -8,7 +8,12 @@ chrome[roe].onMessage.addListener(
             data.cache['tab' + sender.tab.id] = request.timing;
             chrome.storage.local.set(data);
         });
-        chrome.browserAction.setBadgeText({text: request.time, tabId: sender.tab.id});
+
+        var start = request.timing.redirectStart == 0 ? request.timing.fetchStart : request.timing.redirectStart;
+
+        var time  = String(((request.timing.loadEventEnd - start) / 1000).toPrecision(3)).substring(0, 4);
+        
+        chrome.browserAction.setBadgeText({text: time, tabId: sender.tab.id});
     }
 );
 
